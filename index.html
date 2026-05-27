@@ -6,8 +6,8 @@
 <title>Bengaluru Circle APO Tracker</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <style>
-  :root{color-scheme:light;--page:#f6f6f3;--panel:#fff;--panel-soft:#fbfbf8;--ink:#1d211c;--muted:#6c6d66;--soft:#9a9a91;--line:#deded6;--line-soft:#eeeeea;--button:#fff;--button-hover:#f1efe8;--active-bg:#e6f1fb;--active-border:#378add;--focus:#dcebf7;--header:#fafaf8;--green:#347018;--blue:#145f9d;--amber:#a86506;--red:#a32d2d;--ok-bg:#eaf3de;--ok-text:#27500a;--nr-bg:#fcebeb;--nr-text:#791f1f;--rcv-bg:#e6f1fb;--rcv-text:#0c447c;--dev-bg:#e6f1fb;--dev-text:#185fa5;--ac-bg:#eaf3de;--ac-text:#3b6d11;--wl-bg:#faeeda;--wl-text:#633806;--pending-shadow:#f6dada}
-  html[data-theme="dark"]{color-scheme:dark;--page:#111417;--panel:#191d21;--panel-soft:#20252a;--ink:#eef1ec;--muted:#b4b9b2;--soft:#828a83;--line:#343a3f;--line-soft:#2a3035;--button:#20252a;--button-hover:#2a3035;--active-bg:#17324a;--active-border:#3f82bd;--focus:#183d5c;--header:#1f2429;--green:#8ebc62;--blue:#7db7eb;--amber:#d5a044;--red:#ef7773;--ok-bg:#22331f;--ok-text:#b7e895;--nr-bg:#3a2224;--nr-text:#ffb8b5;--rcv-bg:#1d3145;--rcv-text:#abd9ff;--dev-bg:#1d3145;--dev-text:#abd9ff;--ac-bg:#22331f;--ac-text:#b7e895;--wl-bg:#342b1b;--wl-text:#f1ca81;--pending-shadow:#3c2729}
+  :root{color-scheme:light;--page:#f6f6f3;--panel:#fff;--panel-soft:#fbfbf8;--ink:#1d211c;--muted:#6c6d66;--soft:#9a9a91;--line:#deded6;--line-soft:#eeeeea;--button:#fff;--button-hover:#f1efe8;--active-bg:#e6f1fb;--active-border:#378add;--focus:#dcebf7;--header:#fafaf8;--green:#347018;--blue:#145f9d;--amber:#a86506;--red:#a32d2d;--ok-bg:#eaf3de;--ok-text:#27500a;--nr-bg:#fcebeb;--nr-text:#791f1f;--rcv-bg:#e6f1fb;--rcv-text:#0c447c;--dev-bg:#e6f1fb;--dev-text:#185fa5;--ac-bg:#eaf3de;--ac-text:#3b6d11;--wl-bg:#faeeda;--wl-text:#633806;--pub-bg:#f0e9ff;--pub-text:#553a91;--pending-shadow:#f6dada}
+  html[data-theme="dark"]{color-scheme:dark;--page:#111417;--panel:#191d21;--panel-soft:#20252a;--ink:#eef1ec;--muted:#b4b9b2;--soft:#828a83;--line:#343a3f;--line-soft:#2a3035;--button:#20252a;--button-hover:#2a3035;--active-bg:#17324a;--active-border:#3f82bd;--focus:#183d5c;--header:#1f2429;--green:#8ebc62;--blue:#7db7eb;--amber:#d5a044;--red:#ef7773;--ok-bg:#22331f;--ok-text:#b7e895;--nr-bg:#3a2224;--nr-text:#ffb8b5;--rcv-bg:#1d3145;--rcv-text:#abd9ff;--dev-bg:#1d3145;--dev-text:#abd9ff;--ac-bg:#22331f;--ac-text:#b7e895;--wl-bg:#342b1b;--wl-text:#f1ca81;--pub-bg:#2f2544;--pub-text:#d9c8ff;--pending-shadow:#3c2729}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--page);color:var(--ink);min-height:100vh;padding:1.5rem}
   h1{font-size:22px;font-weight:650;letter-spacing:0}
@@ -27,7 +27,7 @@
   .summary-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.8fr);gap:10px;margin-bottom:1rem}
   .summary-panel{background:var(--panel);border:.5px solid var(--line);border-radius:8px;padding:12px}
   .panel-title{font-size:12px;color:var(--muted);font-weight:650;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
-  .wing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .wing-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
   .wing-card{border:.5px solid var(--line-soft);border-radius:8px;padding:10px;background:var(--panel-soft)}
   .wing-head{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:8px}
   .wing-count{color:var(--muted)}
@@ -67,6 +67,7 @@
   .wt-dev{background:var(--dev-bg);color:var(--dev-text)}
   .wt-ac{background:var(--ac-bg);color:var(--ac-text)}
   .wt-wl{background:var(--wl-bg);color:var(--wl-text)}
+  .wt-pub{background:var(--pub-bg);color:var(--pub-text)}
   .badge{display:inline-block;font-size:10px;padding:2px 9px;border-radius:4px;font-weight:500;white-space:nowrap}
   .b-ok{background:var(--ok-bg);color:var(--ok-text)}
   .b-nr{background:var(--nr-bg);color:var(--nr-text)}
@@ -129,6 +130,7 @@
     <span><span class="wing-tag wt-dev">Dev</span> Development wing</span>
     <span><span class="wing-tag wt-ac">AC</span> A &amp; C wing</span>
     <span><span class="wing-tag wt-wl">WL</span> Wildlife wing</span>
+    <span><span class="wing-tag wt-pub">Pub</span> Publicity wing</span>
     <span style="margin-left:auto;color:#b4b2a9">APO Tracker v2.0 &mdash; Bengaluru Circle</span>
   </div>
 </div>
@@ -217,6 +219,12 @@ const ALL=[
   {wing:'WL',scheme:'ETF & LTF Wages',div:'Ramanagara',apo:'Received'},
   {wing:'WL',scheme:'ETF & LTF Wages',div:'Bannerghatta',apo:'Received'},
   {wing:'WL',scheme:'PADF 140 Minor Works',div:'Bannerghatta',apo:'Approved'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Bangalore Urban',apo:'Not received'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Bangalore Rural',apo:'Not received'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Ramanagara',apo:'Not received'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Kolar',apo:'Received'},
+  {wing:'Pub',scheme:'Day Celebration',div:'Bannerghatta',apo:'Received'},
 ];
 
 const DIV_ORDER=['Bangalore Urban','Bangalore Rural','Ramanagara','Chikkaballapura','Kolar','Bannerghatta','Bangalore Urban SF','Bangalore Rural SF','Ramanagara SF','Chikkaballapura SF','Kolar SF'];
@@ -245,13 +253,13 @@ applyTheme(currentTheme);
 
 function pbarColor(p){return p===100?'#639922':p>=60?'#ef9f27':'#e24b4a';}
 function statusClass(s){return s==='Approved'?'b-ok':s==='Received'?'b-r':s==='Not received'?'b-nr':'b-na';}
-function wingClass(w){return w==='Dev'?'wt-dev':w==='AC'?'wt-ac':'wt-wl';}
+function wingClass(w){return w==='Dev'?'wt-dev':w==='AC'?'wt-ac':w==='WL'?'wt-wl':'wt-pub';}
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function isDone(r){return r.apo==='Approved'||r.apo==='Received';}
 function sortIndex(div){const i=DIV_ORDER.indexOf(div);return i<0?999:i;}
 function getScopeRows(){
   let rows=ALL.slice();
-  if(['Dev','AC','WL'].includes(activeScope)) rows=rows.filter(r=>r.wing===activeScope);
+  if(['Dev','AC','WL','Pub'].includes(activeScope)) rows=rows.filter(r=>r.wing===activeScope);
 
   if(activeStatus==='approved') rows=rows.filter(r=>r.apo==='Approved');
   else if(activeStatus==='received') rows=rows.filter(r=>r.apo==='Received');
@@ -266,20 +274,20 @@ function buildMetrics(){
   const t=ALL.length,done=ALL.filter(isDone).length,nr=ALL.filter(r=>r.apo==='Not received').length,approved=ALL.filter(r=>r.apo==='Approved').length;
   const divs=[...new Set(ALL.map(r=>r.div))];
   document.getElementById('metricGrid').innerHTML=`
-    <div class="metric"><div class="mlabel">Total APOs</div><div class="mval">${t}</div><div class="msub">${divs.length} divisions &middot; 3 wings</div></div>
+    <div class="metric"><div class="mlabel">Total APOs</div><div class="mval">${t}</div><div class="msub">${divs.length} divisions &middot; 4 wings</div></div>
+    <div class="metric"><div class="mlabel">Submitted</div><div class="mval" style="color:#27500a">${done}</div><div class="msub">${Math.round(done/t*100)}% submitted APOs to total APOs</div></div>
     <div class="metric"><div class="mlabel">Approved</div><div class="mval" style="color:#185fa5">${approved}</div><div class="msub">${Math.round(approved/t*100)}% approved</div></div>
-    <div class="metric"><div class="mlabel">Submitted</div><div class="mval" style="color:#27500a">${done}</div><div class="msub">${Math.round(done/t*100)}% received or approved</div></div>
     <div class="metric"><div class="mlabel">Not received</div><div class="mval" style="color:#a32d2d">${nr}</div><div class="msub">action needed</div></div>`;
 }
 
 function buildWingSummary(){
-  const wings=['Dev','AC','WL'];
+  const wings=['Dev','AC','WL','Pub'];
   document.getElementById('wingSummary').innerHTML=wings.map(wing=>{
     const rows=ALL.filter(r=>r.wing===wing);
     const done=rows.filter(isDone).length;
     const nr=rows.filter(r=>r.apo==='Not received').length;
     const pct=Math.round(done/rows.length*100);
-    const label=wing==='Dev'?'Development':wing==='AC'?'A & C':'Wildlife';
+    const label=wing==='Dev'?'Development':wing==='AC'?'A & C':wing==='WL'?'Wildlife':'Publicity';
     return`<div class="wing-card">
       <div class="wing-head"><strong><span class="wing-tag ${wingClass(wing)}">${wing}</span>${label}</strong><span class="wing-count">${done}/${rows.length}</span></div>
       <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${pbarColor(pct)}"></div></div>
@@ -301,7 +309,7 @@ function buildPendingList(){
 
 function buildFilters(){
   const opts=[
-    {key:'All',label:'All divisions'},{key:'Dev',label:'Dev wing'},{key:'AC',label:'A & C wing'},{key:'WL',label:'Wildlife wing'}
+    {key:'All',label:'All divisions'},{key:'Dev',label:'Dev wing'},{key:'AC',label:'A & C wing'},{key:'WL',label:'Wildlife wing'},{key:'Pub',label:'Publicity wing'}
   ];
   document.getElementById('filters').innerHTML=opts.map(o=>`<button class="fbtn${activeScope===o.key?' active':''}" onclick="setScope('${o.key}')">${o.label}</button>`).join('');
 }
@@ -333,7 +341,7 @@ function buildDivGrid(){
     return sortIndex(a)-sortIndex(b);
   });
 
-  const labels={All:'All divisions',Dev:'Development wing',AC:'A & C wing',WL:'Wildlife wing'};
+  const labels={All:'All divisions',Dev:'Development wing',AC:'A & C wing',WL:'Wildlife wing',Pub:'Publicity wing'};
   document.getElementById('secTitle').textContent=labels[activeScope]||'Divisions';
   document.getElementById('secSub').textContent=`${rows.length} APO${rows.length===1?'':'s'} shown across ${divs.length} division${divs.length===1?'':'s'}`;
 
