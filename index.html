@@ -348,7 +348,7 @@ function buildDivGrid(){
     return sortIndex(a)-sortIndex(b);
   });
 
-  const labels={All:'All divisions',Dev:'Development wing',A&C:'A & C wing',WL:'Wildlife wing',Pub:'Publicity wing',FRM:'FRM wing'};
+  const labels={All:'All divisions',Dev:'Development wing',AC:'A & C wing',WL:'Wildlife wing',Pub:'Publicity wing',FRM:'FRM wing'};
   document.getElementById('secTitle').textContent=labels[activeScope]||'Divisions';
   document.getElementById('secSub').textContent=`${rows.length} APO${rows.length===1?'':'s'} shown across ${divs.length} division${divs.length===1?'':'s'}`;
 
