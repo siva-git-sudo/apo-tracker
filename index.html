@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APO Tracker — Bengaluru Circle</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f3;color:#1a1a18;min-height:100vh;padding:1.5rem}
+  h1{font-size:20px;font-weight:500}
+  .container{max-width:1100px;margin:0 auto}
+  .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:8px}
+  .top-bar span{font-size:12px;color:#5f5e5a}
+  .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+  @media(max-width:600px){.metric-grid{grid-template-columns:repeat(2,1fr)}}
+  .metric{background:#fff;border-radius:8px;padding:.9rem 1rem;border:0.5px solid #e0dfd8}
+  .metric .mlabel{font-size:11px;color:#888780;margin-bottom:4px}
+  .metric .mval{font-size:24px;font-weight:500}
+  .metric .msub{font-size:11px;color:#b4b2a9;margin-top:2px}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+  .fbtn{font-size:12px;padding:5px 14px;border-radius:20px;border:0.5px solid #c8c7bf;background:#fff;color:#5f5e5a;cursor:pointer;transition:all .15s}
+  .fbtn:hover{background:#f1efe8;border-color:#b4b2a9}
+  .fbtn.active{background:#e6f1fb;color:#185fa5;border-color:#378add}
+  .sec-title{font-size:14px;font-weight:500;margin-bottom:10px;color:#1a1a18}
+  .div-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:2rem}
+  .div-card{background:#fff;border:0.5px solid #e0dfd8;border-radius:12px;overflow:hidden}
+  .div-card.has-pending{border-color:#f09595}
+  .div-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #ebebeb;background:#fafaf8}
+  .div-name{font-size:13px;font-weight:500}
+  .div-progress{display:flex;align-items:center;gap:8px}
+  .pbar-wrap{width:80px;height:6px;background:#ebebeb;border-radius:3px;overflow:hidden}
+  .pbar-fill{height:100%;border-radius:3px;transition:width .4s}
+  .pct{font-size:11px;color:#888780;min-width:30px;text-align:right}
+  .scheme-row{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;border-bottom:0.5px solid #f0efe8}
+  .scheme-row:last-of-type{border-bottom:none}
+  .scheme-name{font-size:11px;color:#5f5e5a;flex:1;padding-right:8px;line-height:1.4}
+  .wing-tag{font-size:10px;padding:1px 6px;border-radius:3px;margin-right:5px;font-weight:500;display:inline-block}
+  .wt-dev{background:#e6f1fb;color:#185fa5}
+  .wt-ac{background:#eaf3de;color:#3b6d11}
+  .wt-wl{background:#faeeda;color:#633806}
+  .badge{display:inline-block;font-size:10px;padding:2px 9px;border-radius:4px;font-weight:500;white-space:nowrap}
+  .b-ok{background:#eaf3de;color:#27500a}
+  .b-nr{background:#fcebeb;color:#791f1f}
+  .b-r{background:#e6f1fb;color:#0c447c}
+  .b-na{background:#f1efe8;color:#5f5e5a}
+  .div-footer{padding:7px 14px;background:#fafaf8;display:flex;gap:8px;align-items:center;font-size:11px;color:#888780;flex-wrap:wrap;border-top:0.5px solid #ebebeb}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:2px}
+  .legend-bar{font-size:11px;color:#888780;display:flex;gap:16px;flex-wrap:wrap;margin-top:.5rem;padding-top:1rem;border-top:0.5px solid #e0dfd8}
+  .no-match{color:#b4b2a9;font-size:13px;padding:1.5rem;text-align:center}
+  @media print{.filters{display:none}.top-bar span{display:block}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1><i class="ti ti-map-pin" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>APO tracker — division view</h1>
+    <span>Bengaluru Circle &nbsp;|&nbsp; May 2026 &nbsp;|&nbsp; <span id="lastUpdated"></span></span>
+  </div>
+
+  <div class="metric-grid" id="metricGrid"></div>
+  <div class="filters" id="filters"></div>
+  <div class="sec-title" id="secTitle">All divisions</div>
+  <div class="div-grid" id="divGrid"></div>
+
+  <div class="legend-bar">
+    <span><span class="wing-tag wt-dev">Dev</span> Development wing</span>
+    <span><span class="wing-tag wt-ac">AC</span> A &amp; C wing</span>
+    <span><span class="wing-tag wt-wl">WL</span> Wildlife wing</span>
+    <span style="margin-left:auto;color:#b4b2a9">APO Tracker v1.0 &mdash; Bengaluru Circle</span>
+  </div>
+</div>
+
+<script>
+const ALL=[
+  {wing:'Dev',scheme:'DDF',div:'Bangalore Urban',apo:'Approved'},
+  {wing:'Dev',scheme:'DDF',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'DDF',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'DDF',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'DDF',div:'Kolar',apo:'Not received'},
+  {wing:'Dev',scheme:'Root stock',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'Root stock',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'Root stock',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'Root stock',div:'Kolar',apo:'Not received'},
+  {wing:'Dev',scheme:'Sirichandana',div:'Bangalore Urban',apo:'Approved'},
+  {wing:'Dev',scheme:'Sirichandana',div:'Kolar',apo:'Not received'},
+  {wing:'Dev',scheme:'Eco Budget',div:'Bangalore Urban',apo:'Not received'},
+  {wing:'Dev',scheme:'Eco Budget',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'Eco Budget',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'Eco Budget',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'Eco Budget',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Bangalore Urban',apo:'Received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Bangalore Rural',apo:'Not received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Bangalore Urban SF',apo:'Approved'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Bangalore Rural SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Ramanagara SF',apo:'Approved'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Chikkaballapura SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Hasiru Karnataka',div:'Kolar SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Bangalore Urban',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Bangalore Rural',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Kolar',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Bangalore Urban SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Bangalore Rural SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Ramanagara SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Chikkaballapura SF',apo:'Not received'},
+  {wing:'Dev',scheme:'Vanamahotsava',div:'Kolar SF',apo:'Not received'},
+  {wing:'Dev',scheme:'GUA',div:'Bangalore Urban',apo:'Approved'},
+  {wing:'Dev',scheme:'GUA',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'GUA',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'GUA',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'GUA',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'RSP',div:'Bangalore Urban',apo:'Approved'},
+  {wing:'Dev',scheme:'RSP',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'RSP',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'RSP',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'RSP',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'RSP',div:'Bangalore Urban SF',apo:'Not received'},
+  {wing:'Dev',scheme:'RSP',div:'Bangalore Rural SF',apo:'Not received'},
+  {wing:'Dev',scheme:'RSP',div:'Ramanagara SF',apo:'Approved'},
+  {wing:'Dev',scheme:'RSP',div:'Chikkaballapura SF',apo:'Approved'},
+  {wing:'Dev',scheme:'RSP',div:'Kolar SF',apo:'Not received'},
+  {wing:'Dev',scheme:'RSPD',div:'Bangalore Urban',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Bangalore Rural',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'RSPD',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'RSPD',div:'Bangalore Urban SF',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Bangalore Rural SF',apo:'Not received'},
+  {wing:'Dev',scheme:'RSPD',div:'Ramanagara SF',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Chikkaballapura SF',apo:'Approved'},
+  {wing:'Dev',scheme:'RSPD',div:'Kolar SF',apo:'Not received'},
+  {wing:'Dev',scheme:'KAPY',div:'Bangalore Rural',apo:'Not received'},
+  {wing:'Dev',scheme:'KAPY',div:'Ramanagara',apo:'Approved'},
+  {wing:'Dev',scheme:'KAPY',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'Dev',scheme:'KAPY',div:'Kolar',apo:'Not received'},
+  {wing:'Dev',scheme:'KAPY',div:'Chikkaballapura SF',apo:'Not received'},
+  {wing:'Dev',scheme:'National Bamboo Mission',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'National Bamboo Mission',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'AC',scheme:'Outsource (2406-034)',div:'Bangalore Urban',apo:'Received'},
+  {wing:'AC',scheme:'Outsource (2406-034)',div:'Bangalore Rural',apo:'Not received'},
+  {wing:'AC',scheme:'Outsource (2406-034)',div:'Ramanagara',apo:'Received'},
+  {wing:'AC',scheme:'Outsource (2406-034)',div:'Chikkaballapura',apo:'Not received'},
+  {wing:'AC',scheme:'Outsource (2406-034)',div:'Kolar',apo:'Not received'},
+  {wing:'WL',scheme:'Wildlife 106 (2406-54)',div:'Ramanagara',apo:'Received'},
+  {wing:'WL',scheme:'Wildlife 106 (2406-54)',div:'Bannerghatta',apo:'Not received'},
+  {wing:'WL',scheme:'Outsource (2406-54)',div:'Kolar',apo:'Received'},
+  {wing:'WL',scheme:'Outsource (2406-54)',div:'Ramanagara',apo:'Received'},
+  {wing:'WL',scheme:'Outsource (2406-54)',div:'Bannerghatta',apo:'Not received'},
+  {wing:'WL',scheme:'ETF & LTF Wages',div:'Bangalore Urban',apo:'Not received'},
+  {wing:'WL',scheme:'ETF & LTF Wages',div:'Ramanagara',apo:'Received'},
+  {wing:'WL',scheme:'ETF & LTF Wages',div:'Bannerghatta',apo:'Received'},
+  {wing:'WL',scheme:'PADF 140 Minor Works',div:'Bannerghatta',apo:'Received'},
+];
+
+const DIV_ORDER=['Bangalore Urban','Bangalore Rural','Ramanagara','Chikkaballapura','Kolar','Bannerghatta','Bangalore Urban SF','Bangalore Rural SF','Ramanagara SF','Chikkaballapura SF','Kolar SF'];
+let activeFilter='All';
+
+document.getElementById('lastUpdated').textContent='Updated: '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+function pbarColor(p){return p===100?'#639922':p>=60?'#ef9f27':'#e24b4a';}
+function statusClass(s){return s==='Approved'?'b-ok':s==='Received'?'b-r':s==='Not received'?'b-nr':'b-na';}
+function wingClass(w){return w==='Dev'?'wt-dev':w==='AC'?'wt-ac':'wt-wl';}
+
+function buildMetrics(){
+  const t=ALL.length,done=ALL.filter(r=>r.apo==='Approved'||r.apo==='Received').length,nr=ALL.filter(r=>r.apo==='Not received').length;
+  const divs=[...new Set(ALL.map(r=>r.div))];
+  const clear=divs.filter(d=>!ALL.find(r=>r.div===d&&r.apo==='Not received')).length;
+  document.getElementById('metricGrid').innerHTML=`
+    <div class="metric"><div class="mlabel">Total APOs</div><div class="mval">${t}</div><div class="msub">${divs.length} divisions &middot; 3 wings</div></div>
+    <div class="metric"><div class="mlabel">Submitted</div><div class="mval" style="color:#27500a">${done}</div><div class="msub">${Math.round(done/t*100)}% complete</div></div>
+    <div class="metric"><div class="mlabel">Not received</div><div class="mval" style="color:#a32d2d">${nr}</div><div class="msub">action needed</div></div>
+    <div class="metric"><div class="mlabel">Divisions fully clear</div><div class="mval" style="color:#185fa5">${clear}</div><div class="msub">of ${divs.length} divisions</div></div>`;
+}
+
+function buildFilters(){
+  const opts=[
+    {key:'All',label:'All divisions'},{key:'pending',label:'Pending only'},{key:'clear',label:'Fully clear'},
+    {key:'Dev',label:'Dev wing'},{key:'AC',label:'A & C wing'},{key:'WL',label:'Wildlife wing'},{key:'SF',label:'SF divisions'}
+  ];
+  document.getElementById('filters').innerHTML=opts.map(o=>`<button class="fbtn${activeFilter===o.key?' active':''}" onclick="setFilter('${o.key}')">${o.label}</button>`).join('');
+}
+
+window.setFilter=function(f){activeFilter=f;buildFilters();buildDivGrid();}
+
+function buildDivGrid(){
+  let divs=[...new Set(ALL.map(r=>r.div))].sort((a,b)=>{
+    const ai=DIV_ORDER.indexOf(a),bi=DIV_ORDER.indexOf(b);
+    return(ai<0?99:ai)-(bi<0?99:bi);
+  });
+  if(activeFilter==='pending') divs=divs.filter(d=>ALL.find(r=>r.div===d&&r.apo==='Not received'));
+  else if(activeFilter==='clear') divs=divs.filter(d=>!ALL.find(r=>r.div===d&&r.apo==='Not received'));
+  else if(activeFilter==='SF') divs=divs.filter(d=>d.includes('SF'));
+  else if(activeFilter==='Dev'){const s=new Set(ALL.filter(r=>r.wing==='Dev').map(r=>r.div));divs=divs.filter(d=>s.has(d));}
+  else if(activeFilter==='AC'){const s=new Set(ALL.filter(r=>r.wing==='AC').map(r=>r.div));divs=divs.filter(d=>s.has(d));}
+  else if(activeFilter==='WL'){const s=new Set(ALL.filter(r=>r.wing==='WL').map(r=>r.div));divs=divs.filter(d=>s.has(d));}
+
+  const labels={All:'All divisions',pending:'Divisions with pending APOs',clear:'Fully cleared divisions',Dev:'Development wing — divisions',AC:'A & C wing — divisions',WL:'Wildlife wing — divisions',SF:'SF divisions'};
+  document.getElementById('secTitle').textContent=labels[activeFilter]||'Divisions';
+
+  if(!divs.length){document.getElementById('divGrid').innerHTML='<div class="no-match">No divisions match this filter.</div>';return;}
+
+  document.getElementById('divGrid').innerHTML=divs.map(div=>{
+    const rows=ALL.filter(r=>r.div===div);
+    const done=rows.filter(r=>r.apo==='Approved'||r.apo==='Received').length;
+    const nr=rows.filter(r=>r.apo==='Not received').length;
+    const pct=Math.round(done/rows.length*100);
+    const isSF=div.includes('SF');
+    return`<div class="div-card${nr>0?' has-pending':''}">
+      <div class="div-header">
+        <div class="div-name"><i class="ti ti-${isSF?'trees':'map-2'}" style="font-size:13px;margin-right:5px;vertical-align:-1px"></i>${div}</div>
+        <div class="div-progress"><div class="pbar-wrap"><div class="pbar-fill" style="width:${pct}%;background:${pbarColor(pct)}"></div></div><span class="pct">${pct}%</span></div>
+      </div>
+      ${rows.map(r=>`<div class="scheme-row"><span class="scheme-name"><span class="wing-tag ${wingClass(r.wing)}">${r.wing}</span>${r.scheme}</span><span class="badge ${statusClass(r.apo)}">${r.apo}</span></div>`).join('')}
+      <div class="div-footer">
+        <span class="dot" style="background:#639922"></span>${rows.filter(r=>r.apo==='Approved').length} approved &nbsp;
+        <span class="dot" style="background:#378add"></span>${rows.filter(r=>r.apo==='Received').length} received &nbsp;
+        <span class="dot" style="background:#e24b4a"></span>${nr} not received
+      </div>
+    </div>`;
+  }).join('');
+}
+
+buildMetrics();buildFilters();buildDivGrid();
+</script>
+</body>
+</html>
