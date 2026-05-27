@@ -205,7 +205,7 @@ const ALL=[
   {wing:'Dev',scheme:'KAPY',div:'Chikkaballapura',apo:'Not received'},
   {wing:'Dev',scheme:'KAPY',div:'Kolar',apo:'Not received'},
   {wing:'Dev',scheme:'KAPY',div:'Chikkaballapura SF',apo:'Not received'},
-  {wing:'Dev',scheme:'National Bamboo Mission',div:'Kolar',apo:'Received'},
+  {wing:'Dev',scheme:'National Bamboo Mission',div:'Kolar',apo:'Received'},AC
   {wing:'Dev',scheme:'National Bamboo Mission',div:'Chikkaballapura',apo:'Not received'},
   {wing:'A&C',scheme:'Outsource-034',div:'Bangalore Urban',apo:'Received'},
   {wing:'A&C',scheme:'Outsource-034',div:'Bangalore Rural',apo:'Not received'},
@@ -348,7 +348,7 @@ function buildDivGrid(){
     return sortIndex(a)-sortIndex(b);
   });
 
-  const labels={All:'All divisions',Dev:'Development wing',AC:'A & C wing',WL:'Wildlife wing',Pub:'Publicity wing',FRM:'FRM wing'};
+  const labels={All:'All divisions',Dev:'Development wing',A&C:'A & C wing',WL:'Wildlife wing',Pub:'Publicity wing',FRM:'FRM wing'};
   document.getElementById('secTitle').textContent=labels[activeScope]||'Divisions';
   document.getElementById('secSub').textContent=`${rows.length} APO${rows.length===1?'':'s'} shown across ${divs.length} division${divs.length===1?'':'s'}`;
 
